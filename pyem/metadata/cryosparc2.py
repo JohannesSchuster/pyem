@@ -294,11 +294,11 @@ def cryosparc_2_cs_motion_parameters(cs, data, trajdir="."):
 
 
 def parse_cryosparc_2_cs(csfile, passthroughs=None, minphic=0, boxsize=None,
-                         swapxy=False, invertx=False, inverty=False):
+                         swapxy=False, invertx=False, inverty=False, max_header_size=100000, allow_pickle=False):
 
     log = logging.getLogger('root')
     log.info("Reading primary input file")
-    cs = csfile if type(csfile) is np.ndarray else np.load(csfile, max_header_size=100000)
+    cs = csfile if type(csfile) is np.ndarray else np.load(csfile, max_header_size=max_header_size, allow_pickle=allow_pickle)
     df = util.dataframe_from_records_mapped(cs, general)
     df = cryosparc_2_cs_particle_locations(cs, df, swapxy=swapxy, invertx=invertx, inverty=inverty)
     df = cryosparc_2_cs_model_parameters(cs, df, minphic=minphic)
@@ -311,7 +311,7 @@ def parse_cryosparc_2_cs(csfile, passthroughs=None, minphic=0, boxsize=None,
                 pt = passthrough
             else:
                 log.info("Reading auxiliary file %s" % passthrough)
-                pt = np.load(passthrough)
+                pt = np.load(passthrough, max_header_size=max_header_size, allow_pickle=allow_pickle)
             names = [n for n in pt.dtype.names if n != 'uid' and n not in cs.dtype.names]
             if len(names) > 0:
                 ptdf = util.dataframe_from_records_mapped(pt, {**general, **micrograph})

@@ -41,7 +41,7 @@ def main(args):
 
     if args.input[0].endswith(".cs"):
         log.info("Detected CryoSPARC 2+ .cs file")
-        cs = np.load(args.input[0])
+        cs = np.load(args.input[0], max_header_size=args.max_header_size, allow_pickle=args.allow_pickle)
         if args.first10k:
             cs = cs[:10000]
 
@@ -75,7 +75,8 @@ def main(args):
         try:
             df = metadata.parse_cryosparc_2_cs(cs, passthroughs=args.input[1:], minphic=args.minphic,
                                                boxsize=args.boxsize, swapxy=args.noswapxy,
-                                               invertx=args.invertx, inverty=args.inverty)
+                                               invertx=args.invertx, inverty=args.inverty,
+                                               max_header_size=args.max_header_size, allow_pickle=args.allow_pickle)
         except (KeyError, ValueError) as e:
             log.error(e, exc_info=True)
             log.error("Required fields could not be mapped. Are you using the right input file(s)?")
@@ -181,6 +182,9 @@ def _main_():
                         nargs="?", default=None, const=-1, type=int)
     parser.add_argument("--10k", help="Only read first 10,000 particles for rapid testing.", action="store_true",
                         dest="first10k")
+    parser.add_argument("--allow-pickle", help="Use pickle for large .cs files - PERMITS ARBITRARY CODE EXECUTION",
+                        action="store_true")
+    parser.add_argument("--max-header-size", help="Set max header size for large .cs files", type=int, default=100000)
     parser.add_argument("--loglevel", "-l", type=str, default="WARNING", help="Logging level and debug output")
     sys.exit(main(parser.parse_args()))
 
