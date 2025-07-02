@@ -1,0 +1,21 @@
+name: pyem
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - numpy
+  - pandas
+  - rich
+  # add other cross-platform packages here
+  - pip:
+      - llvmlite==0.44.0
+      - markdown-it-py==3.0.0
+      - mdurl==0.1.2
+      - natsort==8.4.0
+      - numba==0.61.2
+      - pygments==2.19.2
+      - python-dateutil==2.9.0.post0
+      - pytz==2025.2
+      - six==1.17.0
+      - tzdata==2025.2

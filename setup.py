@@ -5,16 +5,16 @@ from setuptools import find_packages
 
 setup(
     name='pyem',
-    version='0.67',
+    version='0.70',
     packages=find_packages(),
-    url='https://github.com/asarnow/pyem',
+    url='https://github.com/JohannesSchuster/pyem',
     license='GNU Public License Version 3',
-    author='Daniel Asarnow',
-    author_email='asarnow@msg.ucsf.edu',
+    author='Johannes Schuster',
+    author_email='johannessch1703@gmail.com',
     description='Python programs for electron microscopy',
     install_requires=['numba', 'numpy', 'numexpr', 'scipy', 'matplotlib',
                       'seaborn', 'pandas', 'pathos', 'pyfftw', 'healpy',
-                      'natsort', 'starfile'],
+                      'natsort', 'starfile', 'rich'],
     zip_safe=False,
     entry_points={
         'console_scripts': [
@@ -26,6 +26,7 @@ setup(
             'map.py = pyem.cli.map:_main_',
             'mask.py = pyem.cli.mask:_main_',
             'mcstar.py = pyem.cli.mcstar:_main_',
+            'normalize.py = pyem.cli.normalize:_main_',
             'par2star.py = pyem.cli.par2star:_main_',
             'project.py = pyem.cli.project:_main_',
             'projection_subtraction.py = pyem.cli.projection_subtraction:_main_',
