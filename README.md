@@ -43,7 +43,7 @@ export PATH=$(realpath pyem/cli):$PATH
 
 ### Using conda (recommended)
 ```
-conda env create -f environment.yml
+conda env create -f environment.yaml
 conda activate pyem
 ```
 

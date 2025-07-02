@@ -1,6 +1,6 @@
 package:
   name: pyem
-  version: 0.67
+  version: 0.70
 
 source:
   path: .
@@ -16,8 +16,9 @@ build:
     - disparticle.py = pyem.cli.disparticle:_main_
     - emcalc.py = pyem.cli.emcalc:_main_
     - map.py = pyem.cli.map:_main_
-    - mask.py = pyem.cli.map:_main_
+    - mask.py = pyem.cli.mask:_main_
     - mcstar.py = pyem.cli.mcstar:_main_
+    - normalize.py = pyem.cli.normalize:_main_
     - par2star.py = pyem.cli.par2star:_main_
     - project.py = pyem.cli.project:_main_
     - projection_subtraction.py = pyem.cli.projection_subtraction:_main_
@@ -30,33 +31,35 @@ build:
 requirements:
   build:
   host:
-    - python
+    - python >=3.12
     - pip
     - setuptools
   run:
-    - python >=3.9
-    - numba >=0.41
-    - numpy >=1.14
-    - scipy >=1.2
-    - matplotlib-base >=2.2
-    - seaborn >=0.9
-    - pandas >=0.23.4
-    - pathos >=0.2.1
-    - pyfftw >=0.10
-    - healpy >=1.11
-    - natsort >=6.0
-    - starfile >=0.5.2
+    - python >=3.12
+    - numba >=0.61.2
+    - numpy
+    - numexpr
+    - scipy
+    - matplotlib-base
+    - seaborn
+    - pandas
+    - pathos
+    - pyfftw
+    - healpy
+    - natsort
+    - starfile
+    - rich
 
 about:
-  home: https://github.com/asarnow/pyem
+  home: https://github.com/JohannesSchuster/pyem
   license: GPL-3.0-or-later
   license_family: GPL
   license_file: LICENSE
-  summary: Python modules and command-line utilities for electron microscopy of biological samples.
+  summary: Python programs for electron microscopy
   description: |
-    A collection of Python modules and command-line utilities for electron microscopy of biological samples.
+    Python programs for electron microscopy.
     Cite as: Asarnow, D., Palovcak, E., Cheng, Y. UCSF pyem v0.5. Zenodo https://doi.org/10.5281/zenodo.3576630 (2019)
-  dev_url: https://github.com/asarnow/pyem
+  dev_url: https://github.com/JohannesSchuster/pyem
 
 conda:
   channels:
