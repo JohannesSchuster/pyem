@@ -10,3 +10,4 @@ pyfftw>=0.10
 healpy>=1.11
 natsort>=6.0
 starfile
+rich>=10.0
