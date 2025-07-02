@@ -27,10 +27,23 @@ from .. import geom
 from .. import mrc
 from .. import vop
 
+REQUIRED_COMMANDS = [
+    "relion_preprocess",
+    "relion_refine",
+    # Add more relion commands as needed
+]
 
 def cent2edge(bins):
     """Convert bin centers to bin edges"""
-    return np.r_[-np.Inf, 0.5 * (bins[:-1] + bins[1:]), np.Inf]
+    return np.r_[-np.inf, 0.5 * (bins[:-1] + bins[1:]), np.inf]
+
+
+def check_relion_installed() -> dict:
+    """
+    Check if required Relion commands are available in PATH.
+    Returns a dict with command names as keys and bool as values.
+    """
+    return {cmd: which(cmd) is not None for cmd in REQUIRED_COMMANDS}
 
 
 def relion_symmetry_group(sym):
