@@ -18,12 +18,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import glob
-import logging
 import sys
 import numpy as np
-from star import parse_star, write_star
-from EMAN2 import EMData, Vec3f, Transform
-
+from ..star import parse_star, write_star
+try:
+    from EMAN2 import EMData, Vec3f, Transform
+except ImportError:
+    exit()
 
 def main(args):
     star = parse_star(args.input, keep_index=False)

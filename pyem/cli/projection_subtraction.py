@@ -73,10 +73,10 @@ def main(args):
 
     if args.submap_ft is None:
         log.info("Reading volume")
-        submap = mrc.read(args.submap, inc_header=False, compat="relion")
+        submap, _ = mrc.read(args.submap, inc_header=False, compat="relion")
         if args.submask is not None:
             log.info("Masking volume")
-            submask = mrc.read(args.submask, inc_header=False, compat="relion")
+            submask, _ = mrc.read(args.submask, inc_header=False, compat="relion")
             submap *= submask
         log.info("Preparing 3D FFT of volume")
         submap_ft = vop.vol_ft(submap, pfac=args.pfac, threads=min(args.threads, cpu_count()))

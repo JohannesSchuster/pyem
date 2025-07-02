@@ -256,7 +256,7 @@ def is_particle_star(df):
     return df.columns.intersection([Relion.IMAGE_NAME, Relion.TOMOPARTICLENAME] + Relion.COORDS).size
 
 
-def calculate_apix(df):
+def calculate_apix(df) -> float:
     try:
         if df.ndim == 2:
             if Relion.IMAGEPIXELSIZE in df:
@@ -273,7 +273,7 @@ def calculate_apix(df):
         else:
             raise ValueError
     except KeyError:
-        return None
+        return -1
 
 
 def select_classes(df, classes):
@@ -583,7 +583,8 @@ def sort_records(df, inplace=False):
 def original_field(field):
     tok = re.findall("[A-Z][a-z]+", field)
     tok = tok[0] + "Original" + "".join(tok[1:])
-    lead = re.match(r".*?[a-z].*?(?=[A-Z])", field).group()
+    match = re.match(r".*?[a-z].*?(?=[A-Z])", field)
+    lead = match.group() if match else ""
     field = lead + tok
     return field
 

@@ -64,7 +64,10 @@ def main(args):
 
     # TODO parallelize
     for i, row in df.iterrows():
-        xcor = particle_xcorr(row, refmap_ft)
+        xcor = particle_xcorr(row, refmap_ft, (
+            i, s, apix, a, def1[i], def2[i], angast[i], phase[i],
+            kv[i], ac[i], cs[i], xshift[i], yshift[i], sx, sy
+        ))
 
     if args.top is None:
         args.top = df.shape[0]
@@ -75,12 +78,12 @@ def main(args):
     return 0
 
 
-def particle_xcorr(ptcl, refmap_ft):
+def particle_xcorr(ptcl, refmap_ft, params):
+    i, s, apix, a, def1, def2, angast, phase, kv, ac, cs, xshift, yshift, sx, sy = params
     r = util.euler2rot(*np.deg2rad(ptcl[star.Relion.ANGLES]))
     proj = vop.interpolate_slice_numba(refmap_ft, r)
-    c = ctf.eval_ctf(s / apix, a, def1[i], def2[i], angast[i], phase[i],
-                     kv[i], ac[i], cs[i], bf=0, lp=2 * apix)
-    pshift = np.exp(-2 * np.pi * 1j * (-xshift[i] * sx + -yshift * sy))
+    c = ctf.eval_ctf(s / apix, a, def1, def2, angast, phase, kv, ac, cs, bf=0, lp=2 * apix)
+    pshift = np.exp(-2 * np.pi * 1j * (-xshift * sx + -yshift * sy))
     proj_ctf = proj * pshift * c
 
     with mrc.ZSliceReader(ptcl[star.Relion.IMAGE_NAME]) as f:

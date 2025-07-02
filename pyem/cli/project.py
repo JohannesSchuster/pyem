@@ -47,9 +47,9 @@ def main(args):
             if args.size is None:
                 args.size = (f3d.shape[0] - 3) // args.pfac
         else:
-            vol = mrc.read(args.map, inc_header=False, compat="relion")
+            vol, _ = mrc.read(args.map, inc_header=False, compat="relion")
             if args.mask is not None:
-                mask = mrc.read(args.mask, inc_header=False, compat="relion")
+                mask, _ = mrc.read(args.mask, inc_header=False, compat="relion")
                 vol *= mask
             if args.size is None:
                 args.size = vol.shape[0]

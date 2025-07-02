@@ -45,7 +45,7 @@ def main(args):
             c = df[star.Relion.CLASS].value_counts()
             print("%s particles in %d classes" % ("{:,}".format(df.shape[0]), len(c)))
             print("    ".join(['%d: %s (%.2f%%)' % (i, "{:,}".format(s), 100. * s / c.sum())
-                               for i, s in iteritems(c.sort_index())]))
+                               for i, s in c.sort_index().items()]))
         elif star.is_particle_star(df):
             print("%s particles" % "{:,}".format(df.shape[0]))
         if star.Relion.MICROGRAPH_NAME in df.columns:
@@ -115,9 +115,8 @@ def main(args):
         if args.subsample < 1:
             print("Specific integer sample size")
             return 1
-        nsamplings = args.bootstrap if args.bootstrap is not None else df.shape[0] / int(args.subsample)
-        inds = np.random.choice(df.shape[0], size=(nsamplings, int(args.subsample)),
-                                replace=args.bootstrap is not None)
+        nsamplings = int(args.bootstrap if args.bootstrap is not None else df.shape[0] / int(args.subsample))
+        inds = np.random.choice(int(df.shape[0]), size=(nsamplings, int(args.subsample)), replace=args.bootstrap is not None)
         for i, ind in enumerate(inds):
             star.write_star(os.path.join(args.output, os.path.basename(args.input[0])[:-5] + args.suffix + "_%d" % (i + 1)),
                        df.iloc[ind])

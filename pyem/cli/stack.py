@@ -41,13 +41,13 @@ def main(args):
             return 1
 
     if args.float16:
-        dtype = np.float16
+        data_type = np.float16
     else:
-        dtype = np.float32
+        data_type = np.float32
 
     first_ptcl = 0
     dfs = []
-    with mrc.ZSliceWriter(args.output, dtype=dtype) as writer:
+    with mrc.ZSliceWriter(args.output, dtype=data_type) as writer: # type: ignore
         for fn in args.input:
             if fn.endswith(".star"):
                 df = star.parse_star(fn, augment=True)

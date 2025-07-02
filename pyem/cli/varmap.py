@@ -23,11 +23,11 @@ from pyem import mrc
 
 
 def main(args):
-    x = mrc.read(args.input[0])
+    x, _ = mrc.read(args.input[0])
     m2 = np.zeros(x.shape)
     mu = x.copy()
     for i, f in enumerate(args.input[1:]):
-        x = mrc.read(f)
+        x, _ = mrc.read(f)
         olddif = x - mu
         mu += (x - mu) / (i + 1)
         m2 += olddif * (x - mu)

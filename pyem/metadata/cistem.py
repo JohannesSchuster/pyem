@@ -16,16 +16,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from matplotlib.pylab import Any
 import pandas as pd
 from pyem import star
 
 
 def parse_f9_par(fn):
-    head_data = {"Input particle images": None,
-                 "Beam energy (keV)": None,
-                 "Spherical aberration (mm)": None,
-                 "Amplitude contrast": None,
-                 "Pixel size of images (A)": None}
+    head_data: dict[str, Any | None] = {
+        "Input particle images":        None,
+        "Beam energy (keV)":            None,
+        "Spherical aberration (mm)":    None,
+        "Amplitude contrast":           None,
+        "Pixel size of images (A)":     None,
+    }
     ln = 1
     skip = 0
     with open(fn, 'r') as f:

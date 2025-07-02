@@ -110,7 +110,7 @@ def read(fname, inc_header=False, compat="mrc2014"):
     if inc_header:
         return data, hdr
     else:
-        return data
+        return data, None
 
 
 def write(fname, data: np.ndarray, psz: float=1, origin=None, fast=False):
@@ -225,10 +225,6 @@ class ZSliceReader:
     def close(self):
         self.f.close()
 
-    def __iter__(self):
-        self.i = 0
-        return self
-
     def next(self):
         try:
             item = self.read(self.i)
@@ -236,6 +232,13 @@ class ZSliceReader:
             raise StopIteration
         self.i += 1
         return item
+
+    def __iter__(self):
+        self.i = 0
+        return self
+    
+    def __next__(self):
+        return self.next()
 
     def __enter__(self):
         return self
@@ -251,7 +254,6 @@ class ZSliceWriter:
         self.size = None
         self.psz = psz
         self.dtype = None
-        self.f = None
         self.i = 0
         if shape is not None:
             self.set_shape(shape)
@@ -309,8 +311,11 @@ class ZSliceWriter:
         self.i += arr.size / self.size
 
     def close(self):
-        header = mrc_header(shape=(self.shape[1], self.shape[0], self.i),
-                            dtype=self.dtype, psz=self.psz)
+        if self.shape is None or self.dtype is None:
+            self.f.close()
+            raise ValueError("ZSliceWriter must have shape and dtype. Closing without writing header.")
+        
+        header = mrc_header(shape=(self.shape[1], self.shape[0], self.i), dtype=self.dtype, psz=self.psz) # type: ignore
         self.f.seek(0)
         self.f.write(header.tobytes())
         self.f.close()

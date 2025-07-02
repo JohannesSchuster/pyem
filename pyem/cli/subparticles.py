@@ -81,7 +81,7 @@ def main(args):
         if args.target is not None:
             log.warning("--target supersedes --transform")
         try:
-            args.transform = np.array(json.loads(args.transform))
+            args.transform = np.array(json.loads(str(args.transform)))
         except:
             log.error("Transformation matrix must be in JSON/Numpy format")
             return 1
@@ -121,13 +121,13 @@ def main(args):
     elif args.transform is not None:
         r = args.transform[:, :3]
         if args.transform.shape[1] == 4:
-            d = args.transform[:, -1] / args.apix
+            d = args.transform[:, -1] / float(args.apix)
             d = r.dot(args.origin) + d - args.origin
         else:
             d = 0
     elif args.sym is not None or args.displacement != 0:
         r = np.identity(3)
-        d = -args.displacement / args.apix
+        d = -float(args.displacement) / float(args.apix)
     else:
         log.error("At least a target, symmetry group, or displacement must be provided")
         return 1
