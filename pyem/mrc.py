@@ -28,7 +28,7 @@ MODE = {0: np.dtype(np.int8), 1: np.dtype(np.int16), 2: np.dtype(np.float32),
 HEADER_LEN = int(1024)  # Bytes.
 
 
-def mrc_header(shape, dtype=np.float32, psz=1.0):
+def mrc_header(shape, dtype=np.float32, psz: float=1.0):
     header = np.zeros(HEADER_LEN // np.dtype(np.int32).itemsize, dtype=np.int32)
     header_f = header.view(np.float32)
     header[:3] = shape
@@ -113,7 +113,7 @@ def read(fname, inc_header=False, compat="mrc2014"):
         return data
 
 
-def write(fname, data, psz=1, origin=None, fast=False):
+def write(fname, data: np.ndarray, psz: float=1, origin=None, fast=False):
     """
     Write a MRC file. Fortran axes order is assumed.
     :param fname: Destination path.
