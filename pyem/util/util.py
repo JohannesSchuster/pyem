@@ -28,6 +28,7 @@ from .. import mrc
 from .. import vop
 
 REQUIRED_COMMANDS = [
+    "relion",
     "relion_preprocess",
     "relion_refine",
     # Add more relion commands as needed
@@ -43,7 +44,30 @@ def check_relion_installed() -> dict:
     Check if required Relion commands are available in PATH.
     Returns a dict with command names as keys and bool as values.
     """
-    return {cmd: which(cmd) is not None for cmd in REQUIRED_COMMANDS}
+    available = {cmd: which(cmd) is not None for cmd in REQUIRED_COMMANDS}
+    if not all(available.values()):
+        missing = [cmd for cmd, exists in available.items() if not exists]
+        raise RuntimeError(f"Required Relion commands not found in PATH: {', '.join(missing)}")
+    return available
+
+
+def get_relion_command(cmd_name: str) -> str:
+    """
+    Return the full path to a relion command if it exists in PATH, else raise an error.
+    Ignores check_relion_installed() exception if cmd_name is available.
+    """
+    try:
+        cmds = check_relion_installed()
+        if cmds.get(cmd_name):
+            path = which(cmd_name)
+            if path:
+                return path
+    except RuntimeError:
+        # Fallback: check only the requested command
+        path = which(cmd_name)
+        if path:
+            return path
+    raise EnvironmentError(f"{cmd_name} not found in PATH. Please install Relion or add it to your PATH.")
 
 
 def relion_symmetry_group(sym):
