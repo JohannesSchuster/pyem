@@ -1,4 +1,4 @@
-# pyem
+# PyEM
 A collection of Python modules and command-line utilities for electron microscopy of biological samples.
 
 Documentation for the programs can be found in their usage text, comments in code, and in the Wiki of this repository.
@@ -38,6 +38,21 @@ cd pyem
 pip install --no-dependencies -e .
 export PATH=$(realpath pyem/cli):$PATH
 ```
+
+## Setup
+
+### Using conda (recommended)
+```
+conda env create -f environment.yml
+conda activate pyem
+```
+
+### Using pip
+```
+pip install -r requirements.txt
+```
+
+This will install all required dependencies for the project. For best reproducibility, use the conda method above.
 
 # Exporting from cryoSPARC to Relion
 
