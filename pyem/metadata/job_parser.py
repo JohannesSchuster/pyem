@@ -136,7 +136,7 @@ class JobParser:
 
             self.__update_dict(self.__find_cs_files_recursive(job_dir.parent / parent, visited=visited))
             if all(files): break
-
+            
         return files
     
     def __update_dict(self, d2: FileSet):
