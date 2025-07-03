@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from matplotlib.pylab import Any
+from typing import Any
 import pandas as pd
 from pyem import star
 
@@ -65,7 +65,7 @@ def parse_f9_par(fn):
         n = None
     else:
         n = ln - skip - 1
-    par = pd.read_table(fn, skiprows=skip, nrows=n, delimiter="\s+", header=None, comment="C")
+    par = pd.read_table(fn, skiprows=skip, nrows=n, delimiter="\\s+", header=None, comment="C")
     par.columns = headers
     for k in head_data:
         if head_data[k] is not None:
@@ -76,7 +76,7 @@ def parse_f9_par(fn):
 def parse_fx_par(fn):
     with open(fn, 'r') as f:
         columns = f.readline().split()
-        df = pd.read_csv(f, delimiter="\s+", header=None, names=columns, comment="C")
+        df = pd.read_csv(f, delimiter="\\s+", header=None, names=columns, comment="C")
     return df
 
 

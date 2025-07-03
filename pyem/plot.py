@@ -49,7 +49,8 @@ def plot_fsc_curves(fsc, lgdtext=None, title=None, fname=None):
     if title is None:
         title = "FSC Plot"
 
-    sns.set(font_scale=3)
+    # sns.set(font_scale=3)  # deprecated
+    sns.set_theme(context="notebook", font_scale=3)
     fg, ax = plt.subplots(figsize=(20, 10))
     for f in fsc:
         f.plot(x="freq", y="fsc", ax=ax, legend=None, linewidth=4.)
@@ -75,25 +76,27 @@ def plot_fsc_curves(fsc, lgdtext=None, title=None, fname=None):
     return fg, ax
 
 
-def plot_angle_comparison(df1, df2, lgdtext=None, fname=None, maxrot=90):
+def plot_angle_comparison(df1: pd.DataFrame, df2: pd.DataFrame, lgdtext=None, fname=None, maxrot=90):
     # if fname is not None:
     #     mpl.rc("savefig", dpi=300)
 
     if lgdtext is None:
         lgdtext = [u"Second (deg)", u"First (deg)"]
 
-    sns.set(font_scale=3)
+    # sns.set(font_scale=3)  # deprecated
+    sns.set_theme(context="notebook", font_scale=3)
     f, ax = plt.subplots(1, 3, figsize=(30, 10))
-    sns.regplot(df2["rlnAngleRot"], df1["rlnAngleRot"], fit_reg=False, scatter_kws={"s": 16}, ax=ax[0])
+    # Use keyword arguments for x and y in regplot, and remove fit_reg (deprecated, use scatter=False for regression line only)
+    sns.regplot(x=df2["rlnAngleRot"], y=df1["rlnAngleRot"], scatter=True, line_kws=None, scatter_kws={"s": 16}, ax=ax[0])
     ax[0].set_xlim((-maxrot, maxrot))
     ax[0].set_ylim((-maxrot, maxrot))
     ax[0].set_xticks(np.arange(-maxrot, maxrot+1, 15))
     ax[0].set_yticks(np.arange(-maxrot, maxrot+1, 15))
     ax[0].xaxis.label.set_visible(False)
     ax[0].set_ylabel(lgdtext[0])
-    ax[0].set_title(u"$\phi$ ( $Z$ )", y=1.01)
+    ax[0].set_title(u"$\\phi$ ( $Z$ )", y=1.01)
 
-    sns.regplot(df2["rlnAngleTilt"], df1["rlnAngleTilt"], fit_reg=False, scatter_kws={"s": 16}, ax=ax[1])
+    sns.regplot(x=df2["rlnAngleTilt"], y=df1["rlnAngleTilt"], scatter=True, line_kws=None, scatter_kws={"s": 16}, ax=ax[1])
     ax[1].set_xlim((0, 180))
     ax[1].set_ylim((0, 180))
     ax[1].set_xticks(np.arange(0, 181, 30))
@@ -102,14 +105,14 @@ def plot_angle_comparison(df1, df2, lgdtext=None, fname=None, maxrot=90):
     ax[1].yaxis.label.set_visible(False)
     ax[1].set_title(u"$\\theta$ ( $Y'$ )", y=1.01)
 
-    sns.regplot(df2["rlnAnglePsi"], df1["rlnAnglePsi"], fit_reg=False, scatter_kws={"s": 16}, ax=ax[2])
+    sns.regplot(x=df2["rlnAnglePsi"], y=df1["rlnAnglePsi"], scatter=True, line_kws=None, scatter_kws={"s": 16}, ax=ax[2])
     ax[2].set_xlim((-180, 180))
     ax[2].set_ylim((-180, 180))
     ax[2].set_xticks(np.arange(-180, 181, 45))
     ax[2].set_yticks(np.arange(-180, 181, 45))
     ax[2].xaxis.label.set_visible(False)
     ax[2].yaxis.label.set_visible(False)
-    ax[2].set_title(u"$\psi$ ( $Z''$  )", y=1.01)
+    ax[2].set_title(u"$\\psi$ ( $Z''$  )", y=1.01)
     f.text(0.5, -0.05, lgdtext[1], ha='center', fontsize=36)
     f.tight_layout(pad=1., w_pad=-1.5, h_pad=0.5)
     if fname is not None:

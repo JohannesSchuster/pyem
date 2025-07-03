@@ -108,7 +108,7 @@ def parse_star_table(star_path, offset=0, nrows=None, keep_index=False):
     headers, ln = parse_star_table_header(star_path, offset=offset, keep_index=keep_index)
     with open(star_path, 'r') as f:
         f.seek(offset)
-        df = pd.read_csv(f, delimiter='\s+', header=None, skiprows=ln, nrows=nrows)
+        df = pd.read_csv(f, delimiter='\\s+', header=None, skiprows=ln, nrows=nrows)
     df.columns = headers
     return df
 
@@ -137,7 +137,7 @@ def parse_star_table_header(star_path, offset=0, keep_index=False):
 
 
 def write_star_table(star_path, df, table="data_", resort_fields=True, mode='w'):
-    indexed = re.search("#\d+$", df.columns[0]) is not None  # Check first column for '#N' index.
+    indexed = re.search("#\\d+$", df.columns[0]) is not None  # Check first column for '#N' index.
     if not indexed:
         if resort_fields:
             df = sort_fields(df, inplace=True)

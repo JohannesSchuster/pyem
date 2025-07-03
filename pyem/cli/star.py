@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from six import iteritems
+import argparse
 import glob
 import json
 import numpy as np
@@ -29,7 +30,7 @@ from pyem import geom
 from pyem import star
 
 
-def main(args):
+def main(args: argparse.Namespace):
     if args.info:
         args.input.append(args.output)
 
@@ -254,12 +255,19 @@ def main(args):
         df = star.revert_original(df, inplace=True)
 
     if args.set_optics is not None:
+        print(args.set_optics.split(","))
         tok = args.set_optics.split(",")
         df = star.set_optics_groups(df, sep=tok[0], idx=int(tok[1]), inplace=True)
         df.dropna(axis=0, how="any", inplace=True)
 
     if args.offset_optics is not None:
         df[star.Relion.OPTICSGROUP] += args.offset_optics
+
+    if args.set_opticsGroup is not None:
+        tok = args.set_opticsGroup.split(",")
+        df[star.Relion.OPTICSGROUPNAME] = tok[0]
+        df[star.Relion.OPTICSGROUP] = tok[1]
+        df.dropna(axis=0, how="any", inplace=True)
 
     if args.drop_optics_group is not None:
         idx = df[star.Relion.OPTICSGROUP].isin(args.drop_optics_group)
@@ -301,8 +309,18 @@ def main(args):
     return 0
 
 
+def _sanitize_(args: argparse.Namespace) -> bool:
+    """
+    Sanitize the parser by removing arguments conflicts.
+    """
+    if args.set_opticsGroup and (args.offset_optics or args.set_optics or args.copy_optics):
+        print("Cannot set optics group and copy or modify optics at the same time")
+        print("  Either use --set-opticsGroup to set a fixed optics group for all particles")
+        print("  or use --copy-optics --set-optics and --offset-optics to midify optics groups per particle")
+        return False
+    return True
+
 def _main_():
-    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--auxout", help="Auxilliary output .star file with deselected particles", type=str)
     parser.add_argument("--noaugment", help="Do not augment inputs", dest="augment", action="store_false")
@@ -389,6 +407,9 @@ def _main_():
     parser.add_argument("--set-optics",
                         help="Determine optics groups from micrograph basename using a separator and index (e.g. _,4)",
                         type=str)
+    parser.add_argument("--set-opticsGroup",
+                        help="Directly set the optics group of all entries to the value (e.g. opticsGroup1,1)",
+                        type=str)
     parser.add_argument("--offset-optics", help="Offset the optics groups by N", type=int, metavar="N")
     parser.add_argument("--transform",
                         help="Apply rotation matrix or 3x4 rotation plus translation matrix to particles (Numpy format)",
@@ -399,7 +420,10 @@ def _main_():
     parser.add_argument("--relion2", "-r2", help="Write Relion2 compatible STAR file", action="store_true")
     parser.add_argument("input", help="Input .star file(s) or unquoted glob", nargs="*")
     parser.add_argument("output", help="Output .star file")
-    sys.exit(main(parser.parse_args()))
+
+    if _sanitize_(parser.parse_args()):
+        sys.exit(main(parser.parse_args()))
+    sys.exit(1)
 
 
 if __name__ == "__main__":
